@@ -1,3 +1,7 @@
+const ResetButton = ({  }) => {
+
+}
+
 function checkWinner(state) {
   const winner = [
     [0, 1, 2],
@@ -12,7 +16,6 @@ function checkWinner(state) {
 
   for (let i = 0; i < winner.length; i++) {
     const [a, b, c] = winner[i];
-    console.log(winner[i])
     if (state[a] == state[b] && state[a] == state[c] && state[a]) {
       return state[a];
     }
@@ -21,27 +24,21 @@ function checkWinner(state) {
 }
 
 
-const Square = ({ id, newState }) => {
-  const [color, setColor] = React.useState('green');
+const Square = ({ id, newState, resetBoard, color, setColor, winner }) => {
   const [status, setStatus] = React.useState(null);
-  let XorO = ['O', 'X'];
-
+  let XorO = resetBoard;
   const palet = ['red', 'blue', 'green'];
   const getRandomColor = () => palet[Math.floor(Math.random()*3)];
-  React.useEffect(() => {
-    console.log(`Render ${id}`);
-    return () => console.log(`unmounting square ${id}`)
-  }, []);
 
   return (
     <button
       onClick={(e) => {
-        let col = getRandomColor()
-        setColor(col)
+        setColor(getRandomColor)
         let nextPlayer = newState(id)
         setStatus(nextPlayer);
-        e.target.style.background = col
+        e.target.style.background = color
       }}
+      disabled={winner === 1 || winner === 0 ? true : false}
     >
     <h1>{XorO[status]}</h1>
     </button>
@@ -51,9 +48,11 @@ const Square = ({ id, newState }) => {
 const Board = () => {
   const [player, setPlayer] = React.useState(1);
   const [state, setState] = React.useState(Array(9).fill(null));
+  const [resetBoard, setResetBoard] = React.useState(['O', 'X']);
+  const [color, setColor] = React.useState('#0c80f3');
+
   let status = `Player ${player}`;
   let winner = checkWinner(state);
-  console.log(winner);
   if (winner !== null) status = `Player ${winner} wins!!` 
 
   const newState = idOfSquare => {
@@ -66,7 +65,7 @@ const Board = () => {
   }
 
   function renderSquare(i) {
-    return <Square id={i} newState={newState}></Square>
+    return <Square id={i} newState={newState} resetBoard={resetBoard} color={color} setColor={setColor} winner={winner}></Square>
   }
 
   return (
@@ -87,7 +86,12 @@ const Board = () => {
         {renderSquare(8)}
       </div>
       <div className='info'>
-        <button>Show/Hide Row</button>
+        <button onClick={() => {
+          setResetBoard([])
+          setColor('#0c80f3')
+        }
+
+        }>Reset Game</button>
         <h1>{status}</h1>
       </div>
     </div>
