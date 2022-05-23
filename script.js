@@ -12,12 +12,12 @@ function checkWinner(state) {
 
   for (let i = 0; i < winner.length; i++) {
     const [a, b, c] = winner[i];
-    console.log(a,b,c)
+    console.log(winner[i])
     if (state[a] == state[b] && state[a] == state[c] && state[a]) {
       return state[a];
     }
-    return null;
   }
+  return null;
 }
 
 
